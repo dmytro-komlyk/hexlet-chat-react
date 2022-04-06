@@ -1,27 +1,47 @@
 // @ts-check
-import React, { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Card, Form, Button } from 'react-bootstrap';
 import { Formik } from 'formik';
-import * as Yup from 'yup';
+
+import routes from '../../../routes.js';
+import useAuth from '../../hooks/index.jsx';
 
 import loginImage from '../../assets/login.png';
 
-const SignInSchema = Yup.object().shape({
-  username: Yup.string().required('Обязательное поле'),
-  password: Yup.string().required('Обязательное поле'),
-});
-
-function LoginPage() {
+function LoginPage(props) {
+  const auth = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
   const inputRef = useRef();
+  const { state } = props;
+
+  const [authFailed, setAuthFailed] = useState(false);
 
   useEffect(() => {
     inputRef.current.focus();
-  }, [SignInSchema]);
+  }, []);
 
-  const generateOnSubmit = (formData) => {
-    console.log(formData);
+  const generateOnSubmit = async (values) => {
+    setAuthFailed(false);
+    try {
+      const res = await axios.post(routes.loginPath(), values);
+      localStorage.setItem('userId', JSON.stringify(res.data));
+      auth.logIn();
+      const { from } = location.state || state || { from: { pathname: '/' } };
+      navigate(from);
+    } catch (err) {
+      if (err.isAxiosError && err.response.status === 401) {
+        setAuthFailed(true);
+        inputRef.current.select();
+        return;
+      }
+      throw err;
+    }
   };
+
+  console.log(authFailed);
 
   return (
     <div className="container-fluid h-100">
@@ -33,7 +53,6 @@ function LoginPage() {
                 <img src={loginImage} alt="Войти" className="rounded-circle" width={200} height={200} />
               </div>
               <Formik
-                validationSchema={SignInSchema}
                 onSubmit={generateOnSubmit}
                 initialValues={{
                   username: '',
@@ -44,10 +63,8 @@ function LoginPage() {
                   handleSubmit,
                   handleChange,
                   values,
-                  touched,
-                  errors,
                 }) => (
-                  <Form className="col-12 col-md-6 mt-3 mt-mb-0" noValidate onSubmit={handleSubmit}>
+                  <Form className="col-12 col-md-6 mt-3 mt-mb-0" onSubmit={handleSubmit}>
                     <h1 className="text-center mb-4">Войти</h1>
                     <Form.Floating className="mb-3">
                       <Form.Control
@@ -58,10 +75,10 @@ function LoginPage() {
                         ref={inputRef}
                         value={values.username}
                         onChange={handleChange}
-                        isInvalid={touched.username && !!errors.username}
+                        isInvalid={authFailed}
+                        required
                       />
                       <Form.Label htmlFor="username">Ваш ник</Form.Label>
-                      <Form.Control.Feedback type="invalid" tooltip>{errors.username}</Form.Control.Feedback>
                     </Form.Floating>
                     <Form.Floating className="mb-4">
                       <Form.Control
@@ -71,14 +88,12 @@ function LoginPage() {
                         name="password"
                         value={values.password}
                         onChange={handleChange}
-                        isInvalid={touched.password && !!errors.password}
+                        isInvalid={authFailed}
+                        required
                       />
                       <Form.Label htmlFor="password">Пароль</Form.Label>
-                      <Form.Control.Feedback type="invalid" tooltip>{errors.password}</Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid" tooltip>Неверные имя пользователя или пароль</Form.Control.Feedback>
                     </Form.Floating>
-                    <Form.Control.Feedback type="invalid" tooltip>
-                      {errors.city}
-                    </Form.Control.Feedback>
                     <Button type="submit" variant="outline-primary" className="w-100 mb-3">Войти</Button>
                   </Form>
                 )}
