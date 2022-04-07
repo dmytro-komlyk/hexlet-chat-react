@@ -133,8 +133,7 @@ export default (app, defaultState = {}) => {
       .send(_.omit(state, 'users'));
   });
 
-  app
-    .get('*', (_req, reply) => {
-      reply.view('index.pug');
-    });
+  app.get('*', (_req, reply) => {
+    reply.view('index.pug');
+  });
 };
