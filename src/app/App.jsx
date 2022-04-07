@@ -1,6 +1,6 @@
 // @ts-check
 import { has } from 'lodash';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -11,9 +11,9 @@ import {
 } from 'react-router-dom';
 import { Button, Navbar } from 'react-bootstrap';
 
-import LoginPage from './components/pages/LoginPage.jsx';
-import NoMatchPage from './components/pages/NoMatchPage.jsx';
-import ChatPage from './components/pages/ChatPage.jsx';
+import Login from './components/pages/Login.jsx';
+import NoMatch from './components/pages/NoMatch.jsx';
+import Chat from './components/pages/Chat.jsx';
 
 import AuthContext from './contexts/index.jsx';
 import useAuth from './hooks/index.jsx';
@@ -27,8 +27,12 @@ function AuthProvider({ children }) {
     setLoggedIn(false);
   };
 
+  const AuthContextProviderValue = useMemo(() => (
+    { logIn, logOut, loggedIn }
+  ), [logIn, logOut, loggedIn]);
+
   return (
-    <AuthContext.Provider value={{ logIn, logOut, loggedIn }}>
+    <AuthContext.Provider value={AuthContextProviderValue}>
       { children }
     </AuthContext.Provider>
   );
@@ -62,12 +66,12 @@ function App() {
             path="/"
             element={(
               <PrivateRoute>
-                <ChatPage />
+                <Chat />
               </PrivateRoute>
             )}
           />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="*" element={<NoMatchPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<NoMatch />} />
         </Routes>
       </Router>
     </AuthProvider>
