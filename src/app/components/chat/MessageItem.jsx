@@ -1,8 +1,13 @@
 import React from 'react';
 
-function MessageItem() {
+function MessageItem({ message }) {
   return (
-    <div className="text-break mb-2">Message</div>
+    <div className="text-break mb-2">
+      <b>{message.username}</b>
+      :
+      {' '}
+      {message.value}
+    </div>
   );
 }
 
