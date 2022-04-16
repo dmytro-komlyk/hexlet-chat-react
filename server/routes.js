@@ -19,7 +19,8 @@ const buildState = (defaultState) => {
     currentChannelId: generalChannelId,
     users: [
       { id: 1, username: 'admin', password: 'admin' },
-      { id: 2, username: 'alaska', password: 'alaska' },
+      { id: 2, username: 'travmatik', password: '123456' },
+      { id: 3, username: 'alaska', password: '123456' },
     ],
   };
 
