@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { Formik } from 'formik';
+import { useFormik } from 'formik';
 import {
   Col, Form, Button, InputGroup, FormControl,
 } from 'react-bootstrap';
@@ -9,16 +9,43 @@ import { BsArrowRightSquare } from 'react-icons/bs';
 import { selectors as selectorsMessages } from '../../slices/messagesSlice.js';
 import { selectors as selectorsChannel } from '../../slices/channelsSlice.js';
 
+import useAuth from '../../hooks/useAuth.jsx';
+import useSocket from '../../hooks/useSocket.jsx';
+
 import MessageItem from './MessageItem.jsx';
 
 function Messages() {
+  const auth = useAuth();
+  const { newMessage } = useSocket();
+  const inputRef = useRef();
+
   const selectedChannel = useSelector((state) => {
     const id = state.channels.selectedChannel;
     return selectorsChannel.selectById(state, id);
   });
+
   const messages = useSelector((state) => {
     const data = selectorsMessages.selectAll(state);
-    return data.filter((message) => message.id === selectedChannel.id);
+    const id = state.channels.selectedChannel;
+    return data.filter((message) => message.channelId === id);
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      message: '',
+    },
+    onSubmit: async (values, { resetForm }) => {
+      const msg = {
+        channelId: selectedChannel.id,
+        username: auth.loggedIn.username,
+        value: values.message,
+      };
+      newMessage(msg, ({ status }) => {
+        if (status === 'ok') {
+          resetForm();
+        }
+      });
+    },
   });
 
   return (
@@ -41,41 +68,29 @@ function Messages() {
           ))}
         </div>
         <div className="mt-auto px-5 py-3">
-          <Formik
-            onSubmit={console.log}
-            initialValues={{
-              newmessage: '',
-            }}
-          >
-            {({
-              handleSubmit,
-              handleChange,
-              values,
-            }) => (
-              <Form noValidate className="py-1 border rounded-2" onSubmit={handleSubmit}>
-                <InputGroup>
-                  <FormControl
-                    className="border-0 p-0 ps-2"
-                    type="text"
-                    id="newmessage"
-                    name="newmessage"
-                    placeholder="Введите сообщение..."
-                    onChange={handleChange}
-                    value={values.newmessage}
-                  />
-                  <Button
-                    className="d-flex py-1"
-                    type="submit"
-                    variant="tranparent"
-                    size="lg"
-                    disabled={!values.newmessage}
-                  >
-                    <BsArrowRightSquare size={20} />
-                  </Button>
-                </InputGroup>
-              </Form>
-            )}
-          </Formik>
+          <Form noValidate className="py-1 border rounded-2" onSubmit={formik.handleSubmit}>
+            <InputGroup>
+              <FormControl
+                className="border-0 p-0 ps-2"
+                type="text"
+                id="message"
+                name="message"
+                placeholder="Введите сообщение..."
+                ref={inputRef}
+                onChange={formik.handleChange}
+                value={formik.values.message}
+              />
+              <Button
+                className="d-flex py-1"
+                type="submit"
+                variant="tranparent"
+                size="lg"
+                disabled={!formik.values.message}
+              >
+                <BsArrowRightSquare size={20} />
+              </Button>
+            </InputGroup>
+          </Form>
         </div>
       </div>
     </Col>
