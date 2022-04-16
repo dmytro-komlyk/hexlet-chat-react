@@ -19,6 +19,7 @@ const buildState = (defaultState) => {
     currentChannelId: generalChannelId,
     users: [
       { id: 1, username: 'admin', password: 'admin' },
+      { id: 2, username: 'alaska', password: 'alaska' },
     ],
   };
 
@@ -42,7 +43,7 @@ export default (app, defaultState = {}) => {
   const state = buildState(defaultState);
 
   app.io.on('connect', (socket) => {
-    console.log({ 'socket.id': socket.id });
+    console.log('Connect', { 'socket.id': socket.id });
 
     socket.on('newMessage', (message, acknowledge = _.noop) => {
       const messageWithId = {
