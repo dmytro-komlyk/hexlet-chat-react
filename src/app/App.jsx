@@ -12,6 +12,7 @@ import {
 import { Button, Navbar } from 'react-bootstrap';
 
 import Login from './components/Login.jsx';
+import SignUp from './components/SignUp.jsx';
 import NoMatch from './components/NoMatch.jsx';
 import Chat from './components/Chat.jsx';
 
@@ -39,7 +40,6 @@ function Modal() {
   if (!type) {
     return null;
   }
-  console.log(type);
   const Component = getModal(type);
   return <Component />;
 }
@@ -64,6 +64,7 @@ function App() {
             )}
           />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>
       </Router>
