@@ -15,19 +15,21 @@ import useSocket from '../../hooks/useSocket.jsx';
 import MessageItem from './MessageItem.jsx';
 
 function Messages() {
-  const auth = useAuth();
+  const { loggedIn } = useAuth();
   const { newMessage } = useSocket();
   const inputRef = useRef();
 
   const selectedChannel = useSelector((state) => {
     const id = state.channels.selectedChannel;
-    return selectorsChannel.selectById(state, id);
+    const currentChannel = selectorsChannel.selectById(state, id);
+    return currentChannel;
   });
 
   const messages = useSelector((state) => {
     const data = selectorsMessages.selectAll(state);
     const id = state.channels.selectedChannel;
-    return data.filter((message) => message.channelId === id);
+    const currentMessages = data.filter((message) => message.channelId === id);
+    return currentMessages;
   });
 
   const formik = useFormik({
@@ -37,7 +39,7 @@ function Messages() {
     onSubmit: async (values, { resetForm }) => {
       const msg = {
         channelId: selectedChannel.id,
-        username: auth.loggedIn.username,
+        username: loggedIn.username,
         value: values.message,
       };
       newMessage(msg, ({ status }) => {
