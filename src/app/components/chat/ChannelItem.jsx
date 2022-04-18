@@ -12,7 +12,7 @@ import { setCurrentChannel } from '../../slices/channelsSlice.js';
 
 function ChannelItem({ channel }) {
   const dispatch = useDispatch();
-  const id = useSelector((state) => state.channels.selectedChannel);
+  const selectedChannelId = useSelector((state) => state.channels.selectedChannel);
 
   const handleRemoveChannel = () => {
     dispatch(showModal({ type: 'removeChannel', item: channel }));
@@ -29,7 +29,7 @@ function ChannelItem({ channel }) {
   const renderButton = () => (
     <Button
       type="button"
-      variant={channel.id === id ? 'secondary' : 'light'}
+      variant={channel.id === selectedChannelId ? 'secondary' : 'light'}
       className="w-100 text-start text-truncate"
       onClick={handleChangeChannel}
     >
@@ -44,7 +44,11 @@ function ChannelItem({ channel }) {
         ? (
           <Dropdown className="w-100" as={ButtonGroup}>
             { renderButton() }
-            <Dropdown.Toggle split variant={channel.id === id ? 'secondary' : 'light'} id="dropdown-split-basic" />
+            <Dropdown.Toggle
+              split
+              variant={channel.id === selectedChannelId ? 'secondary' : 'light'}
+              id="dropdown-split-basic"
+            />
             <Dropdown.Menu>
               <Dropdown.Item
                 onClick={handleRemoveChannel}
