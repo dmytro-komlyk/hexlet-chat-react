@@ -1,4 +1,3 @@
-// @ts-check
 import axios from 'axios';
 import * as yup from 'yup';
 import React, { useEffect, useRef, useState } from 'react';
@@ -11,17 +10,16 @@ import useAuth from '../hooks/useAuth.jsx';
 
 import loginImage from '../assets/login.png';
 
-function LoginPage(props) {
-  const auth = useAuth();
+function LoginPage() {
+  const { logIn } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const inputRef = useRef();
-  const { state } = props;
 
   const [authFailed, setAuthFailed] = useState(false);
 
   useEffect(() => {
-    inputRef.current.focus();
+    inputRef.current.select();
   }, []);
 
   const formik = useFormik({
@@ -30,15 +28,15 @@ function LoginPage(props) {
       password: '',
     },
     validationSchema: yup.object({
-      username: yup.string().trim().required('Обязательное поле'),
-      password: yup.string().trim().required('Обязательное поле'),
+      username: yup.string().trim().required('Oбязательное поле'),
+      password: yup.string().trim().required('Oбязательное поле'),
     }),
     onSubmit: async (values) => {
       setAuthFailed(false);
       try {
         const res = await axios.post(routes.loginPath(), values);
-        auth.logIn(res.data);
-        const { from } = location.state || state || { from: { pathname: '/' } };
+        logIn(res.data);
+        const { from } = location.state || { from: { pathname: '/' } };
         navigate(from);
       } catch (err) {
         if (err.isAxiosError && err.response.status === 401) {
@@ -70,11 +68,14 @@ function LoginPage(props) {
                     name="username"
                     ref={inputRef}
                     value={formik.values.username}
+                    onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    isInvalid={authFailed || formik.errors.username}
+                    isInvalid={(formik.errors.username || authFailed)
+                      && formik.touched.username}
+                    required
                   />
                   <Form.Label htmlFor="username">Ваш ник</Form.Label>
-                  <Form.Control.Feedback type="invalid">{formik.errors.username}</Form.Control.Feedback>
+                  { (!authFailed || formik.errors.username) && <Form.Control.Feedback type="invalid" tooltip>{formik.errors.username}</Form.Control.Feedback> }
                 </Form.Floating>
                 <Form.Floating className="mb-4">
                   <Form.Control
@@ -83,12 +84,14 @@ function LoginPage(props) {
                     placeholder="Пароль"
                     name="password"
                     value={formik.values.password}
+                    onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    isInvalid={authFailed || formik.errors.username}
+                    isInvalid={(formik.errors.password || authFailed)
+                      && formik.touched.password}
                     required
                   />
                   <Form.Label htmlFor="password">Пароль</Form.Label>
-                  <Form.Control.Feedback type="invalid">{formik.errors.username || 'Неверные имя пользователя или пароль'}</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid" tooltip>{formik.errors.password || 'Неверные имя пользователя или пароль'}</Form.Control.Feedback>
                 </Form.Floating>
                 <Button type="submit" variant="outline-primary" className="w-100 mb-3">Войти</Button>
               </Form>
