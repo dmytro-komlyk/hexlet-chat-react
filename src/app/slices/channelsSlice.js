@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 
 const channelsAdapter = createEntityAdapter();
-const initialState = channelsAdapter.getInitialState({ selectedChannel: null });
+const initialState = channelsAdapter.getInitialState({ selectedChannel: 1 });
 
 const channelsSlice = createSlice({
   name: 'channels',
@@ -16,7 +16,12 @@ const channelsSlice = createSlice({
     setCurrentChannel: (state, { payload }) => {
       state.selectedChannel = payload;
     },
-    deleteChannel: channelsAdapter.removeOne,
+    deleteChannel: (state, action) => {
+      if (state.selectedChannel === action.payload) {
+        state.selectedChannel = 1;
+      }
+      return channelsAdapter.removeOne(state, action);
+    },
     сhangeNameChannel: channelsAdapter.updateOne,
   },
 });
