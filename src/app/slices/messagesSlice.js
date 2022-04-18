@@ -3,6 +3,7 @@ import {
   createSlice,
   createEntityAdapter,
 } from '@reduxjs/toolkit';
+import { deleteChannel } from './channelsSlice.js';
 
 const messagesAdapter = createEntityAdapter();
 const initialState = messagesAdapter.getInitialState({});
@@ -13,6 +14,14 @@ const messagesSlice = createSlice({
   reducers: {
     fetchMessages: messagesAdapter.addMany,
     addMessage: messagesAdapter.addOne,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(deleteChannel, (state, action) => {
+      const channelId = action.payload;
+      const allEntities = Object.values(state.entities);
+      const restEntities = allEntities.filter((e) => e.id !== channelId);
+      messagesAdapter.setAll(state, restEntities);
+    });
   },
 });
 
