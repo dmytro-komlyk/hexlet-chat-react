@@ -1,6 +1,7 @@
 // @ts-check
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import {
   BrowserRouter as Router,
   Routes,
@@ -30,9 +31,10 @@ function PrivateRoute({ children }) {
 }
 
 function AuthButton() {
+  const { t } = useTranslation();
   const auth = useAuth();
 
-  return auth.loggedIn && <Button onClick={auth.logOut}>Выйти</Button>;
+  return auth.loggedIn && <Button onClick={auth.logOut}>{t('btn.logOut')}</Button>;
 }
 
 function Modal() {
@@ -45,12 +47,14 @@ function Modal() {
 }
 
 function App() {
+  const { t } = useTranslation();
+
   return (
     <>
       <Router>
         <Navbar variant="light" bg="white" expand="lg" className="shadow-sm">
           <div className="container">
-            <Navbar.Brand as={Link} to="/">Hexlet Chat</Navbar.Brand>
+            <Navbar.Brand as={Link} to="/">{t('Hexlet Chat')}</Navbar.Brand>
             <AuthButton />
           </div>
         </Navbar>

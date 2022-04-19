@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import {
   Col, Form, Button, InputGroup, FormControl,
@@ -15,6 +16,7 @@ import useSocket from '../../hooks/useSocket.jsx';
 import MessageItem from './MessageItem.jsx';
 
 function Messages() {
+  const { t } = useTranslation();
   const { loggedIn } = useAuth();
   const { newMessage } = useSocket();
   const inputRef = useRef();
@@ -77,7 +79,7 @@ function Messages() {
                 type="text"
                 id="message"
                 name="message"
-                placeholder="Введите сообщение..."
+                placeholder={t('form.message.input')}
                 ref={inputRef}
                 onChange={formik.handleChange}
                 value={formik.values.message}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import {
   Nav,
   Button,
@@ -11,6 +12,7 @@ import { showModal } from '../../slices/modalsSlice.js';
 import { setCurrentChannel } from '../../slices/channelsSlice.js';
 
 function ChannelItem({ channel }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const selectedChannelId = useSelector((state) => state.channels.selectedChannel);
 
@@ -53,12 +55,12 @@ function ChannelItem({ channel }) {
               <Dropdown.Item
                 onClick={handleRemoveChannel}
               >
-                Удалить
+                {t('btn.remove')}
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={handleRenameChannel}
               >
-                Переименовать
+                {t('btn.rename')}
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>

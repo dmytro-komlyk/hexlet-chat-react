@@ -1,16 +1,21 @@
 // @ts-check
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { Image } from 'react-bootstrap';
+
 import noMatchImage from '../assets/404.png';
 
 function NoMatch() {
+  const { t } = useTranslation();
+
   return (
     <div className="text-center">
-      <img alt="Страница не найдена" сlassName="img-fluid" src={noMatchImage} width={500} height={400} />
-      <h1 className="h4 text-muted">Страница не найдена</h1>
+      <Image alt={t('img.noMatch')} src={noMatchImage} width={500} height={400} fluid />
+      <h1 className="h4 text-muted">{t('noMatch.title')}</h1>
       <p className="text-muted">
-        Но вы можете перейти
-        <Link to="/">на главную страницу</Link>
+        {t('noMatch.text')}
+        <Link to="/">{t('noMatch.link')}</Link>
       </p>
     </div>
   );

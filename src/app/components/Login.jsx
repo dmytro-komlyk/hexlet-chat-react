@@ -2,7 +2,10 @@ import axios from 'axios';
 import * as yup from 'yup';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Card, Form, Button } from 'react-bootstrap';
+import {
+  Card, Form, Button, Image,
+} from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 
 import routes from '../../routes.js';
@@ -11,6 +14,7 @@ import useAuth from '../hooks/useAuth.jsx';
 import loginImage from '../assets/login.png';
 
 function LoginPage() {
+  const { t } = useTranslation();
   const { logIn } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
@@ -28,8 +32,8 @@ function LoginPage() {
       password: '',
     },
     validationSchema: yup.object({
-      username: yup.string().trim().required('Oбязательное поле'),
-      password: yup.string().trim().required('Oбязательное поле'),
+      username: yup.string().trim().required(t('form.feedback.invalid.required')),
+      password: yup.string().trim().required(t('form.feedback.invalid.required')),
     }),
     onSubmit: async (values) => {
       setAuthFailed(false);
@@ -56,15 +60,15 @@ function LoginPage() {
           <Card className="shadow-sm">
             <Card.Body className="row p-5">
               <div className="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                <img src={loginImage} alt="Войти" className="rounded-circle" width={200} height={200} />
+                <Image src={loginImage} alt={t('img.login')} className="rounded-circle" width={200} height={200} />
               </div>
               <Form className="col-12 col-md-6 mt-3 mt-mb-0" onSubmit={formik.handleSubmit}>
-                <h1 className="text-center mb-4">Войти</h1>
+                <h1 className="text-center mb-4">{t('form.login.title')}</h1>
                 <Form.Floating className="mb-3">
                   <Form.Control
                     type="text"
                     id="username"
-                    placeholder="Ваш ник"
+                    placeholder={t('form.login.inputUserName')}
                     name="username"
                     ref={inputRef}
                     value={formik.values.username}
@@ -74,14 +78,14 @@ function LoginPage() {
                       && formik.touched.username}
                     required
                   />
-                  <Form.Label htmlFor="username">Ваш ник</Form.Label>
+                  <Form.Label htmlFor="username">{t('form.login.inputUserName')}</Form.Label>
                   { (!authFailed || formik.errors.username) && <Form.Control.Feedback type="invalid" tooltip>{formik.errors.username}</Form.Control.Feedback> }
                 </Form.Floating>
                 <Form.Floating className="mb-4">
                   <Form.Control
                     type="password"
                     id="password"
-                    placeholder="Пароль"
+                    placeholder={t('form.login.inputPassword')}
                     name="password"
                     value={formik.values.password}
                     onBlur={formik.handleBlur}
@@ -90,16 +94,16 @@ function LoginPage() {
                       && formik.touched.password}
                     required
                   />
-                  <Form.Label htmlFor="password">Пароль</Form.Label>
-                  <Form.Control.Feedback type="invalid" tooltip>{formik.errors.password || 'Неверные имя пользователя или пароль'}</Form.Control.Feedback>
+                  <Form.Label htmlFor="password">{t('form.login.inputPassword')}</Form.Label>
+                  <Form.Control.Feedback type="invalid" tooltip>{formik.errors.password || t('form.login.feedback.error.wrongValues')}</Form.Control.Feedback>
                 </Form.Floating>
-                <Button type="submit" variant="outline-primary" className="w-100 mb-3">Войти</Button>
+                <Button type="submit" variant="outline-primary" className="w-100 mb-3">{t('form.login.btn')}</Button>
               </Form>
             </Card.Body>
             <Card.Footer className="p-4">
               <div className="text-center">
-                <span>Нет аккаунта?</span>
-                <Link to="/signup">Регистрация</Link>
+                <span>{t('form.noAccount')}</span>
+                <Link to="/signup">{t('form.signUp.title')}</Link>
               </div>
             </Card.Footer>
           </Card>

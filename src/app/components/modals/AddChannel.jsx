@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 import React, { useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import { Form, Modal, Button } from 'react-bootstrap';
 
@@ -10,6 +11,7 @@ import { hideModal } from '../../slices/modalsSlice.js';
 import { selectors, setCurrentChannel } from '../../slices/channelsSlice.js';
 
 function AddChannel() {
+  const { t } = useTranslation();
   const inputRef = useRef();
   const dispatch = useDispatch();
   const { newChannel } = useSocket();
@@ -30,10 +32,10 @@ function AddChannel() {
     },
     validationSchema: yup.object({
       channelname: yup.string().trim()
-        .required('Обязательное поле')
-        .min(3, 'От 3 до 20 символов')
-        .max(20, 'От 3 до 20 символов')
-        .notOneOf(channels, 'Канал с таким именем уже существует'),
+        .required(t('form.feedback.invalid.required'))
+        .min(3, t('form.feedback.invalid.minMax', { min: '3', max: '20' }))
+        .max(20, t('form.feedback.invalid.minMax', { min: '3', max: '20' }))
+        .notOneOf(channels, t('form.feedback.invalid.notOneOf')),
     }),
     onSubmit: async ({ channelname }) => {
       const channel = {
@@ -52,12 +54,12 @@ function AddChannel() {
   return (
     <Modal show={show} onHide={closeModal}>
       <Modal.Header closeButton>
-        <Modal.Title>Добавить канал</Modal.Title>
+        <Modal.Title>{t('modal.add.title')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
           <Form.Group className="mb-3">
-            <Form.Label htmlFor="channelname" visuallyHidden="true">Имя канала</Form.Label>
+            <Form.Label htmlFor="channelname" visuallyHidden="true">{t('modal.add.input')}</Form.Label>
             <Form.Control
               type="text"
               id="channelname"
@@ -76,9 +78,9 @@ function AddChannel() {
               className="me-2"
               onClick={closeModal}
             >
-              Отменить
+              {t('btn.cancel')}
             </Button>
-            <Button type="submit" variant="primary">Отправить</Button>
+            <Button type="submit" variant="primary">{t('btn.submit')}</Button>
           </div>
         </Form>
       </Modal.Body>

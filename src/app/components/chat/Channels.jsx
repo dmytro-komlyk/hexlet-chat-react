@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Col, Button, Nav } from 'react-bootstrap';
 import { BsPlus } from 'react-icons/bs';
 import { selectors } from '../../slices/channelsSlice.js';
@@ -8,6 +9,7 @@ import { showModal } from '../../slices/modalsSlice.js';
 import ChannelItem from './ChannelItem.jsx';
 
 function Channels() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const channels = useSelector(selectors.selectAll);
 
@@ -16,7 +18,7 @@ function Channels() {
   return (
     <Col xs={4} md={2} className="border-end pt-5 px-0 bg-light">
       <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
-        <span>Каналы</span>
+        <span>{t('channels.title')}</span>
         <Button
           type="button"
           size="sm"

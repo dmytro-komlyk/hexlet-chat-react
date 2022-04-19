@@ -1,10 +1,14 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Modal, Button } from 'react-bootstrap';
+
 import useSocket from '../../hooks/useSocket.jsx';
+
 import { hideModal } from '../../slices/modalsSlice.js';
 
 function RemoveChannel() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { removeChannel } = useSocket();
   const { show, item } = useSelector((state) => state.modals);
@@ -22,10 +26,10 @@ function RemoveChannel() {
   return (
     <Modal show={show} onHide={closeModal}>
       <Modal.Header>
-        <Modal.Title>Удалить канал</Modal.Title>
+        <Modal.Title>{t('modal.remove.title')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p className="lead">Уверены?</p>
+        <p className="lead">{t('modal.remove.text')}</p>
         <div className="d-flex justify-content-end">
           <Button
             type="button"
@@ -33,14 +37,14 @@ function RemoveChannel() {
             className="me-2"
             onClick={closeModal}
           >
-            Отменить
+            {t('btn.cancel')}
           </Button>
           <Button
             type="button"
             variant="danger"
             onClick={generateOnRemove}
           >
-            Удалить
+            {t('btn.remove')}
           </Button>
         </div>
       </Modal.Body>
