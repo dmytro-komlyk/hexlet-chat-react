@@ -2,7 +2,7 @@
   "name": "@hexlet/code",
   "version": "0.0.1",
   "description": "Проект №4 на Hexlet",
-  "main": "src/index.js",
+  "main": "src/app/init.jsx",
   "type": "module",
   "scripts": {
     "test": "jest",
