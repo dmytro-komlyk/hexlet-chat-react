@@ -1,20 +1,40 @@
 // @ts-check
-import { createInstance } from 'i18next';
+import React, { createContext, useMemo } from 'react';
 import { initReactI18next } from 'react-i18next';
+import i18next from 'i18next';
+import profanity from 'leo-profanity';
+
 import resources from '../locales/index.js';
 
-const filter = require('leo-profanity');
+const I18nContext = createContext({});
 
-filter.add(filter.getDictionary('ru'));
+function I18nProvider({ children }) {
+  const i18n = i18next.createInstance();
+  i18n
+    .use(initReactI18next)
+    .init({
+      lng: 'ru',
+      fallbackLng: 'ru',
+      // debug: true,
+      resources,
+    });
 
-const i18n = createInstance({
-  lng: 'ru',
-  fallbackLng: 'ru',
-  debug: true,
-  resources,
-});
+  const filter = profanity.add(profanity.getDictionary('ru'));
+  filter.add(profanity.getDictionary('en'));
 
-i18n.use(initReactI18next).init();
+  const isProfanity = (msg) => filter.check(msg);
+  const clean = (msg) => filter.clean(msg);
 
-export { filter };
-export default i18n;
+  const valueProvider = useMemo(() => (
+    { isProfanity, clean }
+  ), [isProfanity, clean]);
+
+  return (
+    <I18nContext.Provider value={valueProvider}>
+      { children }
+    </I18nContext.Provider>
+  );
+}
+
+export { I18nProvider };
+export default I18nContext;
