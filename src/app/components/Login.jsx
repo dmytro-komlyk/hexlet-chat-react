@@ -95,7 +95,7 @@ function LoginPage() {
                     required
                   />
                   <Form.Label htmlFor="password">{t('form.login.inputPassword')}</Form.Label>
-                  <Form.Control.Feedback type="invalid" tooltip>{formik.errors.password || t('form.login.feedback.error.wrongValues')}</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid" tooltip>{formik.errors.password || t('form.feedback.error.wrongValues')}</Form.Control.Feedback>
                 </Form.Floating>
                 <Button type="submit" variant="outline-primary" className="w-100 mb-3">{t('form.login.btn')}</Button>
               </Form>
