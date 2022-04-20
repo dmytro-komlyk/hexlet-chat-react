@@ -55,7 +55,7 @@ function App() {
       <Router>
         <Navbar variant="light" bg="white" expand="lg" className="shadow-sm">
           <div className="container">
-            <Navbar.Brand as={Link} to="/">{t('Hexlet Chat')}</Navbar.Brand>
+            <Navbar.Brand as={Link} to="/">{t('nav.brand')}</Navbar.Brand>
             <AuthButton />
           </div>
         </Navbar>
