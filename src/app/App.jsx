@@ -11,6 +11,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { Button, Navbar } from 'react-bootstrap';
+import { ToastContainer as Toast } from 'react-toastify';
 
 import Login from './components/Login.jsx';
 import SignUp from './components/SignUp.jsx';
@@ -73,6 +74,7 @@ function App() {
         </Routes>
       </Router>
       <Modal />
+      <Toast />
     </>
   );
 }
