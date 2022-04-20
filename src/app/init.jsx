@@ -11,27 +11,29 @@ import { I18nProvider } from './contexts/i18nContext.jsx';
 import { AuthProvider } from './contexts/authContext.jsx';
 import { SocketProvider } from './contexts/socketContext.jsx';
 
-const rollbarConfig = {
-  accessToken: 'cfb004f2884d42d7aae180b7d690074b',
-  captureUncaught: true,
-  captureUnhandledRejections: true,
-  payload: {
-    environment: 'production',
-  },
-};
+const init = async () => {
+  const rollbarConfig = {
+    accessToken: 'cfb004f2884d42d7aae180b7d690074b',
+    captureUncaught: true,
+    captureUnhandledRejections: true,
+    payload: {
+      environment: 'production',
+    },
+  };
 
-const init = async () => (
-  <RollbarProvider config={rollbarConfig}>
-    <Provider store={store}>
-      <SocketProvider>
-        <I18nProvider>
-          <AuthProvider>
-            <App />
-          </AuthProvider>
-        </I18nProvider>
-      </SocketProvider>
-    </Provider>
-  </RollbarProvider>
-);
+  return (
+    <RollbarProvider config={rollbarConfig}>
+      <Provider store={store}>
+        <SocketProvider>
+          <I18nProvider>
+            <AuthProvider>
+              <App />
+            </AuthProvider>
+          </I18nProvider>
+        </SocketProvider>
+      </Provider>
+    </RollbarProvider>
+  );
+};
 
 export default init;
