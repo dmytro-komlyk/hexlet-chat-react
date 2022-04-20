@@ -1,9 +1,10 @@
 import React from 'react';
-import { filter } from '../../contexts/i18nContext.jsx';
+import useMultiLanguage from '../../hooks/useMultiLanguage.jsx';
 
 function MessageItem({ message }) {
+  const { isProfanity, clean } = useMultiLanguage();
   const { username, value } = message;
-  const cleanedValue = filter.check(value) ? filter.clean(value) : value;
+  const cleanedValue = isProfanity(value) ? clean(value) : value;
 
   return (
     <div className="text-break mb-2">
