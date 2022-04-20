@@ -3,6 +3,10 @@ import { createInstance } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import resources from '../locales/index.js';
 
+const filter = require('leo-profanity');
+
+filter.add(filter.getDictionary('ru'));
+
 const i18n = createInstance({
   lng: 'ru',
   fallbackLng: 'ru',
@@ -12,4 +16,5 @@ const i18n = createInstance({
 
 i18n.use(initReactI18next).init();
 
+export { filter };
 export default i18n;
