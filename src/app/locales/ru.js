@@ -68,5 +68,17 @@ export default {
       login: 'Войти',
       noMatch: '"Страница не найдена',
     },
+    notify: {
+      success: {
+        data: 'Загрузка успешна',
+        addChannel: 'Канал создан',
+        removeChannel: 'Канал удален',
+        renameChannel: 'Канал переименован',
+
+      },
+      failed: {
+        network: 'Ошибка сети',
+      },
+    },
   },
 };
