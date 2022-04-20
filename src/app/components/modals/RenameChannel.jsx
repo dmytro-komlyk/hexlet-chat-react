@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import { Form, Modal, Button } from 'react-bootstrap';
+import { toast as notify } from 'react-toastify';
 
 import useSocket from '../../hooks/useSocket.jsx';
 import { hideModal } from '../../slices/modalsSlice.js';
@@ -38,6 +39,9 @@ function RenameChannel() {
       renameChannel({ id: item.id, name: channelname }, ({ status }) => {
         if (status === 'ok') {
           closeModal();
+          notify.success(t('notify.success.renameChannel'));
+        } else {
+          notify.war(t('notify.failed.network'));
         }
       });
     },

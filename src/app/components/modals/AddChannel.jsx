@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import { Form, Modal, Button } from 'react-bootstrap';
+import { toast as notify } from 'react-toastify';
 
 import useSocket from '../../hooks/useSocket.jsx';
 
@@ -46,6 +47,9 @@ function AddChannel() {
         if (status === 'ok') {
           moveToChannel(data.id);
           closeModal();
+          notify.success(t('notify.success.addChannel'));
+        } else {
+          notify.warn(t('notify.failed.network'));
         }
       });
     },

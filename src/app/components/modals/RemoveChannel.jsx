@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Modal, Button } from 'react-bootstrap';
+import { toast as notify } from 'react-toastify';
 
 import useSocket from '../../hooks/useSocket.jsx';
 
@@ -19,6 +20,9 @@ function RemoveChannel() {
     removeChannel(item, ({ status }) => {
       if (status === 'ok') {
         closeModal();
+        notify.success(t('notify.success.removeChannel'));
+      } else {
+        notify.war(t('notify.failed.network'));
       }
     });
   };

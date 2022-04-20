@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, batch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Container, Row } from 'react-bootstrap';
+import { toast as notify } from 'react-toastify';
 
 import routes from '../../routes.js';
 
@@ -22,15 +24,26 @@ const getAuthHeader = () => {
 };
 
 function Chat() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(routes.dataPath(), { headers: getAuthHeader() });
-      const { channels, messages, currentChannelId } = response.data;
-      dispatch(fetchChannels(channels));
-      dispatch(fetchMessages(messages));
-      dispatch(setCurrentChannel(currentChannelId));
+      try {
+        const response = await axios.get(routes.dataPath(), { headers: getAuthHeader() });
+        const { channels, messages, currentChannelId } = response.data;
+        batch(() => {
+          dispatch(fetchChannels(channels));
+          dispatch(fetchMessages(messages));
+          dispatch(setCurrentChannel(currentChannelId));
+        });
+      } catch (err) {
+        if (err.response.status > 500) {
+          notify.war(t('notify.failed.network'));
+          return;
+        }
+        throw err;
+      }
     };
     fetchData();
   }, [dispatch]);
