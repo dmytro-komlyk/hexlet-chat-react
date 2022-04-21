@@ -45,15 +45,17 @@ const init = async (socket) => {
   socket.on('renameChannel', ({ id, name }) => store.dispatch(сhangeNameChannel({ id, changes: { name } })));
 
   return (
-    <SocketContext.Provider value={socket}>
-      <I18nextProvider i18n={i18n}>
-        <Provider store={store}>
-          <AuthProvider>
-            <App />
-          </AuthProvider>
-        </Provider>
-      </I18nextProvider>
-    </SocketContext.Provider>
+    <RollbarProvider config={rollbarConfig}>
+      <SocketContext.Provider value={socket}>
+        <I18nextProvider i18n={i18n}>
+          <Provider store={store}>
+            <AuthProvider>
+              <App />
+            </AuthProvider>
+          </Provider>
+        </I18nextProvider>
+      </SocketContext.Provider>
+    </RollbarProvider>
   );
 };
 
