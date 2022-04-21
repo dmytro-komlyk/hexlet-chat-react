@@ -27,6 +27,7 @@ function Channels() {
           onClick={openModal}
         >
           <BsPlus size={20} />
+          <span className="visually-hidden">+</span>
         </Button>
       </div>
       <Nav as="ul" fill variant="pills" className="flex-column px-2">
