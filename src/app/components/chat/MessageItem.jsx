@@ -1,10 +1,9 @@
 import React from 'react';
-import useMultiLanguage from '../../hooks/useMultiLanguage.jsx';
+import filter from 'leo-profanity';
 
 function MessageItem({ message }) {
-  const { isProfanity, clean } = useMultiLanguage();
   const { username, value } = message;
-  const cleanedValue = isProfanity(value) ? clean(value) : value;
+  const cleanedValue = filter.clean(value);
 
   return (
     <div className="text-break mb-2">
