@@ -94,7 +94,7 @@ function Messages() {
                 type="submit"
                 variant="tranparent"
                 size="lg"
-                disabled={formik.values.text === '' || isSubmiting}
+                disabled={formik.values.message === '' || isSubmiting}
               >
                 <BsArrowRightSquare size={20} />
                 <span className="visually-hidden">{t('btn.submit')}</span>
