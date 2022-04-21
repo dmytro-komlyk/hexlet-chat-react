@@ -88,6 +88,7 @@ function Messages() {
               <Button
                 className="d-flex py-1"
                 type="submit"
+                name="Отправить"
                 variant="tranparent"
                 size="lg"
                 disabled={!formik.values.message}
