@@ -44,7 +44,7 @@ function Messages() {
         username: loggedIn.username,
         value: values.message,
       };
-      newMessage(msg, ({ status }) => {
+      await newMessage(msg, ({ status }) => {
         if (status === 'ok') {
           resetForm();
         }
@@ -88,13 +88,12 @@ function Messages() {
               <Button
                 className="d-flex py-1"
                 type="submit"
-                name="Отправить"
                 variant="tranparent"
                 size="lg"
                 disabled={!formik.values.message}
               >
                 <BsArrowRightSquare size={20} />
-                <span className="visually-hidden">Отправить</span>
+                <span className="visually-hidden">{t('btn.submit')}</span>
               </Button>
             </InputGroup>
           </Form>
