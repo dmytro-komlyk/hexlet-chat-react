@@ -79,6 +79,7 @@ function Messages() {
                 type="text"
                 id="message"
                 name="message"
+                aria-label={t('form.message.label')}
                 placeholder={t('form.message.input')}
                 ref={inputRef}
                 onChange={formik.handleChange}
