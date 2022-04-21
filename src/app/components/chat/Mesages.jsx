@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
@@ -21,6 +21,8 @@ function Messages() {
   const { newMessage } = useSocket();
   const inputRef = useRef();
 
+  const [isSubmiting, setSubmiting] = useState(false);
+
   const selectedChannel = useSelector((state) => {
     const id = state.channels.selectedChannel;
     const currentChannel = selectorsChannel.selectById(state, id);
@@ -39,14 +41,16 @@ function Messages() {
       message: '',
     },
     onSubmit: async (values, { resetForm }) => {
+      setSubmiting(true);
       const msg = {
         channelId: selectedChannel.id,
         username: loggedIn.username,
         value: values.message,
       };
-      await newMessage(msg, ({ status }) => {
+      newMessage(msg, ({ status }) => {
         if (status === 'ok') {
           resetForm();
+          setSubmiting(false);
         }
       });
     },
@@ -90,7 +94,7 @@ function Messages() {
                 type="submit"
                 variant="tranparent"
                 size="lg"
-                disabled={!formik.values.message}
+                disabled={formik.values.text === '' || isSubmiting}
               >
                 <BsArrowRightSquare size={20} />
                 <span className="visually-hidden">{t('btn.submit')}</span>
