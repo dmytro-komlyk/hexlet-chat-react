@@ -1,38 +1,59 @@
 // @ts-check
 import React from 'react';
 import { Provider } from 'react-redux';
+import i18n from 'i18next';
+import { I18nextProvider } from 'react-i18next';
 import { Provider as RollbarProvider } from '@rollbar/react';
+import filter from 'leo-profanity';
+
+import resources from './locales/index.js';
+
+import store from './slices/index.js';
+import { addMessage } from './slices/messagesSlice.js';
+import { addChannel, deleteChannel, сhangeNameChannel } from './slices/channelsSlice.js';
+
+import { AuthProvider } from './contexts/auth.jsx';
+import SocketContext from './contexts/socket.jsx';
 
 import App from './App.jsx';
 
-import store from './slices/index.js';
+const rollbarConfig = {
+  accessToken: 'cfb004f2884d42d7aae180b7d690074b',
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+  payload: {
+    environment: 'production',
+  },
+};
 
-import { I18nProvider } from './contexts/i18nContext.jsx';
-import { AuthProvider } from './contexts/authContext.jsx';
-import { SocketProvider } from './contexts/socketContext.jsx';
+const init = async (socket) => {
+  await i18n
+    .init({
+      lng: 'ru',
+      fallbackLng: 'ru',
+      debug: true,
+      resources,
+    });
 
-const init = async () => {
-  const rollbarConfig = {
-    accessToken: 'cfb004f2884d42d7aae180b7d690074b',
-    captureUncaught: true,
-    captureUnhandledRejections: true,
-    payload: {
-      environment: 'production',
-    },
-  };
+  filter.loadDictionary();
+  filter.add(filter.getDictionary('en'));
+  filter.add(filter.getDictionary('ru'));
+
+  socket.on('newMessage', (message) => store.dispatch(addMessage(message)));
+  socket.on('newChannel', (channel) => store.dispatch(addChannel(channel)));
+  socket.on('removeChannel', ({ id }) => store.dispatch(deleteChannel(id)));
+  socket.on('renameChannel', ({ id, name }) => store.dispatch(сhangeNameChannel({ id, changes: { name } })));
 
   return (
-    <RollbarProvider config={rollbarConfig}>
-      <Provider store={store}>
-        <SocketProvider>
-          <I18nProvider>
-            <AuthProvider>
-              <App />
-            </AuthProvider>
-          </I18nProvider>
-        </SocketProvider>
-      </Provider>
-    </RollbarProvider>
+    <SocketContext.Provider value={socket}>
+      <I18nextProvider i18n={i18n}>
+        <Provider store={store}>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </Provider>
+      </I18nextProvider>
+    </SocketContext.Provider>
   );
 };
 
