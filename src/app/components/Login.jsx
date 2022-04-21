@@ -48,6 +48,7 @@ function LoginPage() {
           inputRef.current.select();
           return;
         }
+        console.log(err);
         throw err;
       }
     },
