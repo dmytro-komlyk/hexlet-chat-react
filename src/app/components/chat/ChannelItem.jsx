@@ -50,7 +50,9 @@ function ChannelItem({ channel }) {
               split
               variant={channel.id === selectedChannelId ? 'secondary' : 'light'}
               id="dropdown-split-basic"
-            />
+            >
+              <span className="visually-hidden">Управление каналом</span>
+            </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item
                 onClick={handleRemoveChannel}
@@ -62,6 +64,7 @@ function ChannelItem({ channel }) {
               >
                 {t('btn.rename')}
               </Dropdown.Item>
+
             </Dropdown.Menu>
           </Dropdown>
         )
