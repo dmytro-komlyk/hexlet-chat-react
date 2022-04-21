@@ -13,7 +13,7 @@ import { selectors } from '../../slices/channelsSlice.js';
 function RenameChannel() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { renameChannel } = useSocket();
+  const socket = useSocket();
   const inputRef = useRef();
   const { show, item } = useSelector((state) => state.modals);
   const channels = useSelector(selectors.selectAll).map(({ name }) => name);
@@ -36,7 +36,7 @@ function RenameChannel() {
         .notOneOf(channels, t('form.feedback.invalid.notOneOf')),
     }),
     onSubmit: async ({ channelname }) => {
-      renameChannel({ id: item.id, name: channelname }, ({ status }) => {
+      socket.emit('renameChannel', { id: item.id, name: channelname }, ({ status }) => {
         if (status === 'ok') {
           closeModal();
           notify.success(t('notify.success.renameChannel'));

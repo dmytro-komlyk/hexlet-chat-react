@@ -18,7 +18,7 @@ import MessageItem from './MessageItem.jsx';
 function Messages() {
   const { t } = useTranslation();
   const { loggedIn } = useAuth();
-  const { newMessage } = useSocket();
+  const socket = useSocket();
   const inputRef = useRef();
 
   const [isSubmiting, setSubmiting] = useState(false);
@@ -47,7 +47,7 @@ function Messages() {
         username: loggedIn.username,
         value: values.message,
       };
-      newMessage(msg, ({ status }) => {
+      socket.emit('newMessage', msg, ({ status }) => {
         if (status === 'ok') {
           resetForm();
           setSubmiting(false);

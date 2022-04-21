@@ -11,13 +11,13 @@ import { hideModal } from '../../slices/modalsSlice.js';
 function RemoveChannel() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { removeChannel } = useSocket();
+  const socket = useSocket();
   const { show, item } = useSelector((state) => state.modals);
 
   const closeModal = () => dispatch(hideModal());
 
   const generateOnRemove = async () => {
-    removeChannel(item, ({ status }) => {
+    socket.emit('removeChannel', item, ({ status }) => {
       if (status === 'ok') {
         closeModal();
         notify.success(t('notify.success.removeChannel'));

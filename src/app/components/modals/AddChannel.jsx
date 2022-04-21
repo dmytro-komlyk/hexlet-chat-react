@@ -15,7 +15,7 @@ function AddChannel() {
   const { t } = useTranslation();
   const inputRef = useRef();
   const dispatch = useDispatch();
-  const { newChannel } = useSocket();
+  const socket = useSocket();
   const channels = useSelector(selectors.selectAll).map(({ name }) => name);
   const { show } = useSelector((state) => state.modals);
 
@@ -43,7 +43,7 @@ function AddChannel() {
         name: channelname,
         removable: true,
       };
-      newChannel(channel, ({ status, data }) => {
+      socket.emit('newChannel', channel, ({ status, data }) => {
         if (status === 'ok') {
           moveToChannel(data.id);
           closeModal();
