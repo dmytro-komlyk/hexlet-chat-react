@@ -93,6 +93,7 @@ function Messages() {
                 disabled={!formik.values.message}
               >
                 <BsArrowRightSquare size={20} />
+                <span className="visually-hidden">Отправить</span>
               </Button>
             </InputGroup>
           </Form>
