@@ -42,7 +42,6 @@ function Chat() {
           notify.war(t('notify.failed.network'));
           return;
         }
-        console.log(err);
         throw err;
       }
     };

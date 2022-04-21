@@ -52,7 +52,6 @@ function SignUp() {
           inputRef.current.select();
           return;
         }
-        console.log(err);
         throw err;
       }
     },
