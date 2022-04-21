@@ -25,6 +25,7 @@ export default {
       channel: {},
       message: {
         input: 'Введите сообщение...',
+        label: 'Новое сообщение',
       },
       feedback: {
         error: {
